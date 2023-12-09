@@ -1,19 +1,73 @@
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView,StyleSheet, Text, View } from 'react-native';
-import SignInScreen from './src/screens/SignInScreen';
-import SignUpScreen from './src/screens/SignUpScreen';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ProductsList } from './screens/ProductsList.js';
+import { ProductDetails } from './screens/ProductDetails.js';
+import { Cart } from './screens/Cart.js';
+import { CartIcon } from './components/CartIcon.js';
+import { CartProvider } from './CartContext.js';
+import { firebaseConfig } from './firebaseConfig';
+import { Signup } from './screens/Signup.js';
+import { Login } from './screens/Login.js';
+import { CheckoutScreen } from './screens/CheckOut.js';
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+function App() {
   return (
-    <SafeAreaView style={styles.root}>
-      <SignInScreen />
-    </SafeAreaView>
+    <CartProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name='Signup'
+            component={Signup}
+            options={({ navigation }) => ({
+              title: 'Sign Up',
+              headerTitleStyle: styles.headerTitle,
+              headerRight: () => <CartIcon navigation={navigation} />,
+            })}
+          />
+          <Stack.Screen
+            name='Login'
+            component={Login}
+            options={({ navigation }) => ({
+              title: 'Login',
+              headerTitleStyle: styles.headerTitle,
+              headerRight: () => <CartIcon navigation={navigation} />,
+            })}
+          />
+          <Stack.Screen name='Products' component={ProductsList}
+            options={({ navigation }) => ({
+              title: 'Products',
+              headerTitleStyle: styles.headerTitle,
+              headerRight: () => <CartIcon navigation={navigation} />
+            })} />
+          <Stack.Screen name='ProductDetails' component={ProductDetails}
+            options={({ navigation }) => ({
+              title: 'Product details',
+              headerTitleStyle: styles.headerTitle,
+              headerRight: () => <CartIcon navigation={navigation} />,
+            })} />
+          <Stack.Screen name='Cart' component={Cart}
+            options={({ navigation }) => ({
+              title: 'My cart',
+              headerTitleStyle: styles.headerTitle,
+              headerRight: () => <CartIcon navigation={navigation} />,
+            })} />
+          <Stack.Screen name='Checkout' component={CheckoutScreen}
+            options={({ navigation }) => ({
+              title: 'Check Out',
+              headerTitleStyle: styles.headerTitle,
+              headerRight: () => <CartIcon navigation={navigation} />,
+            })} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </CartProvider>
   );
 }
-
 const styles = StyleSheet.create({
-  root:{
-    flex:1,
-    backgroundColor:"#F9FBFC"
-  }
+  headerTitle: {
+    fontSize: 20
+  },
 });
+export default App;
